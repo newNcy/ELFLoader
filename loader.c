@@ -3,6 +3,18 @@
 #include <string.h>
 #include <malloc.h>
 
+
+int sizeoffile(FILE *f)
+{
+    unsigned int o = ftell(f);
+    fseek(f,0,SEEK_END);
+    int s = ftell(f);
+    fseek(f,o,SEEK_SET);
+    return s;
+}
+/**
+ * 打印程序头类型 
+ */
 void p_type( Elf64_Word type )
 {
 
@@ -50,8 +62,26 @@ void p_type( Elf64_Word type )
         printf("PT_GNU_STACK\n");
         break;
     default:
-        printf("%p\n",type);
+        printf("%u\n",type);
     }
+}
+
+/**
+ * 打印程序头flag
+ */
+void p_flag(Elf64_Word flag)
+{
+    printf("%p ",flag);
+    if (flag &  PF_R ){
+        printf("PF_R ");
+    }
+    if (flag & PF_W) {
+        printf("PF_W ");
+    }
+    if (flag & PF_X) {
+        printf("PF_X ");
+    }
+    printf("\n");
 }
 
 int main (int argc, char * argv[])
@@ -60,6 +90,7 @@ int main (int argc, char * argv[])
     FILE * file = fopen(argv[0],"rb");
     if (file == NULL) return 0;
 
+    printf("文件大小 %d\n",sizeoffile(file));
     Elf64_Ehdr ehdr;
     memset(&ehdr, 0, sizeof(ehdr));
 
@@ -69,25 +100,27 @@ int main (int argc, char * argv[])
     printf("section数量:%d\n", ehdr.e_shnum);
     printf("程序入口:%p\n",(void*)ehdr.e_entry);
     printf("程序表大小:%d\n",ehdr.e_phentsize);
-    printf("程序表头位置:%p\n",(void*)ehdr.e_phoff);
+    printf("程序表头位置:%p\n\n",(void*)ehdr.e_phoff);
     fseek(file, ehdr.e_phoff, SEEK_SET);
     int phdrlen = ehdr.e_phnum * sizeof(Elf64_Phdr);
     Elf64_Phdr * pdhr = (Elf64_Phdr *)malloc(phdrlen);
     fread(pdhr, phdrlen, 1, file);
     for (int i = 0; i < ehdr.e_phnum; i++) {
-        printf("表[%d]类型 ",i);
+        if (pdhr[i].p_offset == 0 || pdhr[i].p_filesz == 0)
+            continue;
+        printf("[%d]类型 ",i);
         p_type(pdhr[i].p_type);
-        printf("表[%d]flafs %u\n",i, pdhr[i].p_flags);
-        printf("表[%d]偏移 %u\n",i, pdhr[i].p_offset);
-        printf("表[%d]虚拟地址 %u\n",i, pdhr[i].p_vaddr);
-        printf("表[%d]物理地址 %u\n",i, pdhr[i].p_paddr);
-        printf("表[%d]文件大小 %u\n",i, pdhr[i].p_filesz);
-        printf("表[%d]内存大小 %u\n",i, pdhr[i].p_memsz);
-        printf("表[%d]对齐方式 %u\n",i, pdhr[i].p_align);
-        printf("表[%d]段起始位置 %u\n",i, pdhr[i].p_offset + ehdr.e_phentsize);
+        printf("flags ");
+        p_flag(pdhr[i].p_flags);
+        printf("偏移[%u] ", pdhr[i].p_offset);
+        printf("虚拟地址[%u] ", pdhr[i].p_vaddr);
+        printf("物理地址[%u]\n", pdhr[i].p_paddr);
+        printf("文件大小[%u] ", pdhr[i].p_filesz);
+        printf("内存大小[%u]\n", pdhr[i].p_memsz);
+        printf("对齐方式[%u] ", pdhr[i].p_align);
+        printf("段起始位置[%u]\n", pdhr[i].p_offset + ehdr.e_phentsize);
+        printf("[...%llu个字节...]\n",pdhr[i].p_filesz - ehdr.e_phentsize);
 
-        if(pdhr[i].p_type == PT_LOAD) { 
-        }
         printf("\n");
     }
     fclose(file);

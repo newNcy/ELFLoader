@@ -1,0 +1,24 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Ehdr64	loader.c	/^void Ehdr64(Elf64_Ehdr ehdr)$/;"	f	typeref:typename:void	signature:(Elf64_Ehdr ehdr)
+Ehdr64	loader.c	/^void Ehdr64(Elf64_Ehdr ehdr);$/;"	p	typeref:typename:void	file:	signature:(Elf64_Ehdr ehdr)
+Phdr64	loader.c	/^void Phdr64(Elf64_Phdr pdhr)$/;"	f	typeref:typename:void	signature:(Elf64_Phdr pdhr)
+Phdr64	loader.c	/^void Phdr64(Elf64_Phdr phdr);$/;"	p	typeref:typename:void	file:	signature:(Elf64_Phdr phdr)
+Shdr64	loader.c	/^void Shdr64(Elf64_Shdr shdr,char * shstrtab)$/;"	f	typeref:typename:void	signature:(Elf64_Shdr shdr,char * shstrtab)
+Shdr64	loader.c	/^void Shdr64(Elf64_Shdr shdr,char *);$/;"	p	typeref:typename:void	file:	signature:(Elf64_Shdr shdr,char *)
+main	a.c	/^int main ()$/;"	f	typeref:typename:int	signature:()
+main	loader.c	/^int main (int argc, char * argv[])$/;"	f	typeref:typename:int	signature:(int argc,char * argv[])
+p_flag	loader.c	/^void p_flag(Elf64_Word flag)$/;"	f	typeref:typename:void	signature:(Elf64_Word flag)
+p_flag	loader.c	/^void p_flag(Elf64_Word flag);$/;"	p	typeref:typename:void	file:	signature:(Elf64_Word flag)
+p_type	loader.c	/^void p_type( Elf64_Word type )$/;"	f	typeref:typename:void	signature:(Elf64_Word type)
+p_type	loader.c	/^void p_type( Elf64_Word type );$/;"	p	typeref:typename:void	file:	signature:(Elf64_Word type)
+s_flag	loader.c	/^void s_flag(Elf64_Word flag)$/;"	f	typeref:typename:void	signature:(Elf64_Word flag)
+s_flag	loader.c	/^void s_flag(Elf64_Word flag);$/;"	p	typeref:typename:void	file:	signature:(Elf64_Word flag)
+s_type	loader.c	/^void s_type( Elf64_Word type )$/;"	f	typeref:typename:void	signature:(Elf64_Word type)
+s_type	loader.c	/^void s_type( Elf64_Word type );$/;"	p	typeref:typename:void	file:	signature:(Elf64_Word type)
+sizeoffile	loader.c	/^int sizeoffile(FILE *f)$/;"	f	typeref:typename:int	signature:(FILE * f)

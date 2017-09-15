@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/data/data/com.termux/files/home/ELFLoader/src/loader.c
+stdio.h
+-
+linux/elf.h
+-
+string.h
+-
+malloc.h
+-
+section_table.h
+/data/data/com.termux/files/home/ELFLoader/src/section_table.h
+program_table.h
+/data/data/com.termux/files/home/ELFLoader/src/program_table.h
+
+/data/data/com.termux/files/home/ELFLoader/src/program_table.c
+program_table.h
+/data/data/com.termux/files/home/ELFLoader/src/program_table.h
+
+/data/data/com.termux/files/home/ELFLoader/src/section_table.c
+section_table.h
+/data/data/com.termux/files/home/ELFLoader/src/section_table.h
+
+include/program_table.h
+stdio.h
+-
+linux/elf.h
+-
+
+include/section_table.h
+stdio.h
+-
+linux/elf.h
+-
+

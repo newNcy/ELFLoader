@@ -31,22 +31,22 @@ cmake_force:
 # Set environment variables for the build.
 
 # The shell in which to execute make rules.
-SHELL = /data/data/com.termux/files/usr/bin/sh
+SHELL = /data/data/io.neoterm/files/usr/bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /data/data/com.termux/files/usr/bin/cmake
+CMAKE_COMMAND = /data/data/io.neoterm/files/usr/bin/cmake
 
 # The command to remove a file.
-RM = /data/data/com.termux/files/usr/bin/cmake -E remove -f
+RM = /data/data/io.neoterm/files/usr/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /data/data/com.termux/files/home/ELFLoader
+CMAKE_SOURCE_DIR = /data/data/io.neoterm/files/home/ELFLoader
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /data/data/com.termux/files/home/ELFLoader
+CMAKE_BINARY_DIR = /data/data/io.neoterm/files/home/ELFLoader
 
 # Include any dependencies generated for this target.
 include CMakeFiles/load.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/load.dir/flags.make
 
 CMakeFiles/load.dir/src/loader.c.o: CMakeFiles/load.dir/flags.make
 CMakeFiles/load.dir/src/loader.c.o: src/loader.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/data/data/com.termux/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/load.dir/src/loader.c.o"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/load.dir/src/loader.c.o   -c /data/data/com.termux/files/home/ELFLoader/src/loader.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/load.dir/src/loader.c.o"
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/load.dir/src/loader.c.o   -c /data/data/io.neoterm/files/home/ELFLoader/src/loader.c
 
 CMakeFiles/load.dir/src/loader.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/load.dir/src/loader.c.i"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /data/data/com.termux/files/home/ELFLoader/src/loader.c > CMakeFiles/load.dir/src/loader.c.i
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /data/data/io.neoterm/files/home/ELFLoader/src/loader.c > CMakeFiles/load.dir/src/loader.c.i
 
 CMakeFiles/load.dir/src/loader.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/load.dir/src/loader.c.s"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /data/data/com.termux/files/home/ELFLoader/src/loader.c -o CMakeFiles/load.dir/src/loader.c.s
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /data/data/io.neoterm/files/home/ELFLoader/src/loader.c -o CMakeFiles/load.dir/src/loader.c.s
 
 CMakeFiles/load.dir/src/loader.c.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/load.dir/src/loader.c.o.provides.build: CMakeFiles/load.dir/src/loade
 
 CMakeFiles/load.dir/src/program_table.c.o: CMakeFiles/load.dir/flags.make
 CMakeFiles/load.dir/src/program_table.c.o: src/program_table.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/data/data/com.termux/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/load.dir/src/program_table.c.o"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/load.dir/src/program_table.c.o   -c /data/data/com.termux/files/home/ELFLoader/src/program_table.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/load.dir/src/program_table.c.o"
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/load.dir/src/program_table.c.o   -c /data/data/io.neoterm/files/home/ELFLoader/src/program_table.c
 
 CMakeFiles/load.dir/src/program_table.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/load.dir/src/program_table.c.i"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /data/data/com.termux/files/home/ELFLoader/src/program_table.c > CMakeFiles/load.dir/src/program_table.c.i
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /data/data/io.neoterm/files/home/ELFLoader/src/program_table.c > CMakeFiles/load.dir/src/program_table.c.i
 
 CMakeFiles/load.dir/src/program_table.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/load.dir/src/program_table.c.s"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /data/data/com.termux/files/home/ELFLoader/src/program_table.c -o CMakeFiles/load.dir/src/program_table.c.s
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /data/data/io.neoterm/files/home/ELFLoader/src/program_table.c -o CMakeFiles/load.dir/src/program_table.c.s
 
 CMakeFiles/load.dir/src/program_table.c.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/load.dir/src/program_table.c.o.provides.build: CMakeFiles/load.dir/sr
 
 CMakeFiles/load.dir/src/section_table.c.o: CMakeFiles/load.dir/flags.make
 CMakeFiles/load.dir/src/section_table.c.o: src/section_table.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/data/data/com.termux/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/load.dir/src/section_table.c.o"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/load.dir/src/section_table.c.o   -c /data/data/com.termux/files/home/ELFLoader/src/section_table.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/load.dir/src/section_table.c.o"
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/load.dir/src/section_table.c.o   -c /data/data/io.neoterm/files/home/ELFLoader/src/section_table.c
 
 CMakeFiles/load.dir/src/section_table.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/load.dir/src/section_table.c.i"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /data/data/com.termux/files/home/ELFLoader/src/section_table.c > CMakeFiles/load.dir/src/section_table.c.i
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /data/data/io.neoterm/files/home/ELFLoader/src/section_table.c > CMakeFiles/load.dir/src/section_table.c.i
 
 CMakeFiles/load.dir/src/section_table.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/load.dir/src/section_table.c.s"
-	/data/data/com.termux/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /data/data/com.termux/files/home/ELFLoader/src/section_table.c -o CMakeFiles/load.dir/src/section_table.c.s
+	/data/data/io.neoterm/files/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /data/data/io.neoterm/files/home/ELFLoader/src/section_table.c -o CMakeFiles/load.dir/src/section_table.c.s
 
 CMakeFiles/load.dir/src/section_table.c.o.requires:
 
@@ -143,7 +143,7 @@ load: CMakeFiles/load.dir/src/program_table.c.o
 load: CMakeFiles/load.dir/src/section_table.c.o
 load: CMakeFiles/load.dir/build.make
 load: CMakeFiles/load.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/data/data/com.termux/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable load"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable load"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/load.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -162,6 +162,6 @@ CMakeFiles/load.dir/clean:
 .PHONY : CMakeFiles/load.dir/clean
 
 CMakeFiles/load.dir/depend:
-	cd /data/data/com.termux/files/home/ELFLoader && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /data/data/com.termux/files/home/ELFLoader /data/data/com.termux/files/home/ELFLoader /data/data/com.termux/files/home/ELFLoader /data/data/com.termux/files/home/ELFLoader /data/data/com.termux/files/home/ELFLoader/CMakeFiles/load.dir/DependInfo.cmake --color=$(COLOR)
+	cd /data/data/io.neoterm/files/home/ELFLoader && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /data/data/io.neoterm/files/home/ELFLoader /data/data/io.neoterm/files/home/ELFLoader /data/data/io.neoterm/files/home/ELFLoader /data/data/io.neoterm/files/home/ELFLoader /data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/load.dir/depend
 

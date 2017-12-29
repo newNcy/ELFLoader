@@ -96,11 +96,13 @@ int main (int argc, char * argv[])
     printf("需要%p字节来加载段\n",load_size);
 
     char * loaded = (char*)malloc(end-start);
+    /* 遍历程序头表 */
     for (int i = 0; i < ehdr.e_phnum; i++) {
         fseek(file,phdr[i].p_offset,SEEK_SET);
+        /* 尝试加载到内存中  没有重定位 没有执行权限 估计不能运行 */
         fread(loaded + phdr[i].p_vaddr,phdr[i].p_filesz,1,file);
         if (phdr[i].p_type == PT_INTERP) {
-            printf("interpreter");
+            printf("解释器解释的段\n");
         }
         if (phdr[i].p_type == PT_LOAD) {
             int l = phdr[i].p_filesz;
@@ -135,12 +137,12 @@ int main (int argc, char * argv[])
     /* 逐个解析 */
     for (int i = 0; i < ehdr.e_shnum; i++) {
         //printf("%p\n",ftell(file));
-        //Shdr64(shdr[i],names);
+       Shdr64(shdr[i],names);
         if (shdr[i].sh_type == SHT_SYMTAB) {
             int sc = shdr[i].sh_size/sizeof(Elf64_Sym);
-            printf("%d个全局符号\n",sc);
+            printf("符号表[%d]\n",sc);
             int strndx = shdr[i].sh_link;
-            printf("连接到[%010p]\n",strndx);
+            printf("连接到[%010p]字符串表\n",strndx);
             fseek(file, shdr[strndx].sh_offset,SEEK_SET);
             char * strings = (char *)malloc(shdr[strndx].sh_size);
             fread(strings,shdr[strndx].sh_size,1,file);
@@ -150,10 +152,55 @@ int main (int argc, char * argv[])
             for(int j = 0; j<sc; j++) {
                 Elf64_Sym sym;
                 fread(&sym,sizeof(sym),1,file);
-                printf("[%s]%010p\n",strings + sym.st_name, sym.st_value);
+                printf("[%s]=[%x]",strings + sym.st_name, sym.st_value);
+                char SIT[10][7] = {
+                    "NOTYPE",
+                    "OBJECT",
+                    "FUNC",
+                    "SECTION",
+                    "FILE",
+                    "LOPROC",
+                    "HIPROC"
+                };
+                char SB[10][7] = {
+                    "LOCAL",
+                    "GLOBAL",
+                    "WEAK",
+                    "LOPROC",
+                    "HIPROC"
+                };
+                int sit = 0; // TYPE
+                int sb = 0; // BIND
+                int sif = 0; //INFO
+                if (ehdr.e_ident[EI_CLASS] == ELFCLASS32) {
+                    sb = ELF32_ST_BIND(sym.st_info);
+                    sit = ELF32_ST_TYPE(sym.st_info);
+                }
+                else  if (ehdr.e_ident[EI_CLASS] == ELFCLASS64) {
+                    sb = ELF64_ST_BIND(sym.st_info);
+                    sit = ELF64_ST_TYPE(sym.st_info);
+                }
+                
+                printf("BIND_");
+                if (sb <=2) {
+                    printf("%s",SB[sb]);
+                }else if (sit == 13) {
+                    printf("%s",SB[3]);
+                }else if (sit == 15) {
+                    printf("%s",SB[4]);
+                }
+                printf(" ");
+                if (sit <=4) {
+                    printf("TYPE_%s\n",SIT[sit]);
+                }else if (sit == 13) {
+                    printf("TYPE_%s\n",SIT[5]);
+                }else if (sit == 15) {
+                    printf("TYPE_%s\n",SIT[5]);
+                }
             }
-            
-        }else if (shdr[i].sh_type == SHT_STRTAB) {
+        }else if (shdr[i].sh_type == SHT_REL) {
+            printf("重定位表\n");
+        } else if (shdr[i].sh_type == SHT_STRTAB) {
         }
         if (shdr[i].sh_addr != 0x0) {
             printf("[%010p]%s\n",shdr[i].sh_addr,names+shdr[i].sh_name);
@@ -165,9 +212,7 @@ int main (int argc, char * argv[])
                        loaded[j+0]);
             }
             printf("\n");
-        }
-
-              
+        }     
     }
     free(names);
 

@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/data/data/com.termux/files/home/ELFLoader/src/loader.c" "/data/data/com.termux/files/home/ELFLoader/CMakeFiles/load.dir/src/loader.c.o"
-  "/data/data/com.termux/files/home/ELFLoader/src/program_table.c" "/data/data/com.termux/files/home/ELFLoader/CMakeFiles/load.dir/src/program_table.c.o"
-  "/data/data/com.termux/files/home/ELFLoader/src/section_table.c" "/data/data/com.termux/files/home/ELFLoader/CMakeFiles/load.dir/src/section_table.c.o"
+  "/data/data/io.neoterm/files/home/ELFLoader/src/loader.c" "/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/src/loader.c.o"
+  "/data/data/io.neoterm/files/home/ELFLoader/src/program_table.c" "/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/src/program_table.c.o"
+  "/data/data/io.neoterm/files/home/ELFLoader/src/section_table.c" "/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/src/section_table.c.o"
   )
 set(CMAKE_C_COMPILER_ID "Clang")
 

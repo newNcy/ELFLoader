@@ -1,1 +1,1 @@
-/data/data/io.neoterm/files/usr/bin/cc   -rdynamic CMakeFiles/load.dir/src/loader.c.o CMakeFiles/load.dir/src/program_table.c.o CMakeFiles/load.dir/src/section_table.c.o  -o load 
+/usr/bin/cc     CMakeFiles/load.dir/src/program_table.c.o CMakeFiles/load.dir/src/loader.c.o CMakeFiles/load.dir/src/section_table.c.o  -o load -rdynamic 

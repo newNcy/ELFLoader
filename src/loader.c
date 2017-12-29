@@ -95,12 +95,12 @@ int main (int argc, char * argv[])
     size_t load_size = get_load_size(phdr,ehdr.e_phnum,&start,&end);
     printf("需要%p字节来加载段\n",load_size);
 
-    char * loaded = (char*)malloc(end-start);
+  //  char * loaded = (char*)malloc(end-start);
     /* 遍历程序头表 */
     for (int i = 0; i < ehdr.e_phnum; i++) {
         fseek(file,phdr[i].p_offset,SEEK_SET);
         /* 尝试加载到内存中  没有重定位 没有执行权限 估计不能运行 */
-        fread(loaded + phdr[i].p_vaddr,phdr[i].p_filesz,1,file);
+        //fread(loaded + phdr[i].p_vaddr,phdr[i].p_filesz,1,file);
         if (phdr[i].p_type == PT_INTERP) {
             printf("解释器解释的段\n");
         }
@@ -205,11 +205,11 @@ int main (int argc, char * argv[])
         if (shdr[i].sh_addr != 0x0) {
             printf("[%010p]%s\n",shdr[i].sh_addr,names+shdr[i].sh_name);
             for (int j = shdr[i].sh_addr; j < shdr[i].sh_size + shdr[i].sh_addr; j+= 4) {
-                printf("%02x%02x%02x%02x \n",
-                       loaded[j+3],
-                       loaded[j+2],
-                       loaded[j+1],
-                       loaded[j+0]);
+                //printf("%02x%02x%02x%02x \n",
+                       //loaded[j+3],
+                       //loaded[j+2],
+                       //loaded[j+1],
+                       //loaded[j+0]);
             }
             printf("\n");
         }     

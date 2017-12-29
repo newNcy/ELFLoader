@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/load.dir/src/loader.c.o"
   "CMakeFiles/load.dir/src/program_table.c.o"
+  "CMakeFiles/load.dir/src/loader.c.o"
   "CMakeFiles/load.dir/src/section_table.c.o"
   "load.pdb"
   "load"

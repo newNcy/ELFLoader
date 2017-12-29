@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/echo/code/ELFloader/src/loader.c" "/home/echo/code/ELFloader/CMakeFiles/load.dir/src/loader.c.o"
-  "/home/echo/code/ELFloader/src/program_table.c" "/home/echo/code/ELFloader/CMakeFiles/load.dir/src/program_table.c.o"
-  "/home/echo/code/ELFloader/src/section_table.c" "/home/echo/code/ELFloader/CMakeFiles/load.dir/src/section_table.c.o"
+  "/data/data/io.neoterm/files/home/ELFLoader/src/loader.c" "/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/src/loader.c.o"
+  "/data/data/io.neoterm/files/home/ELFLoader/src/program_table.c" "/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/src/program_table.c.o"
+  "/data/data/io.neoterm/files/home/ELFLoader/src/section_table.c" "/data/data/io.neoterm/files/home/ELFLoader/CMakeFiles/load.dir/src/section_table.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "Clang")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH

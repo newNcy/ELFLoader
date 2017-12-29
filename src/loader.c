@@ -24,20 +24,41 @@ void Ehdr64(Elf64_Ehdr ehdr);
  */
 void Ehdr64(Elf64_Ehdr ehdr)
 {
-    putchar(ehdr.e_ident[EI_MAG0]);
-    putchar(ehdr.e_ident[EI_MAG1]);
-    putchar(ehdr.e_ident[EI_MAG2]);
-    putchar(ehdr.e_ident[EI_MAG3]);
-    putchar('\n');
-    printf("Bit[%d]\n",ehdr.e_ident[EI_CLASS]==1?32:64);
-    printf("PN[%d]\n", ehdr.e_phnum);
-    printf("SN[%d]\n", ehdr.e_shnum);
-    printf("->[%p]\n",(void*)ehdr.e_entry);
-    printf("PS[%d]\n",ehdr.e_phentsize);
-    printf("PO[%p]\n",(void*)ehdr.e_phoff);
-    printf("SS[%d]\n",ehdr.e_shentsize);
-    printf("SO[%p]\n\n",(void*)ehdr.e_shoff);
-    printf("SIDX[%p]\n\n",(void*)ehdr.e_shstrndx);
+    printf("ELF header:\n magic: ");
+    for (int i = 0; i<EI_NIDENT;i++) {
+        printf("%02x ",ehdr.e_ident[i]);
+    }
+    char *ET[7] = {
+        "No file type",
+        "Relocatable file",
+        "Executable file",
+        "Shared object file",
+        "Core file"
+    };
+    char *MC[20] = {
+        "No machine",
+        "AT&T WE 321000",
+        "SPARC",
+        "Intel Architecture",
+        "Motorola 68000",
+        "Motorola 88000",
+        "Intel 80860",
+        "MIPS RS3000 Big-Endian",
+        "MIPS RS4000 Big-Endian"
+    };
+    printf("\n 文件类型                  %s",ET[ehdr.e_type]);
+    printf("\n 种类                      ELF%d",ehdr.e_ident[EI_CLASS]==1?32:64);
+    printf("\n 字节序                    %s", ehdr.e_ident[EI_DATA]==1?"小端":"大端");
+    //printf("\n机器                      %d", ehdr.e_machine);
+    printf("\n 入口地址                  0x%x", ehdr.e_entry);
+    printf("\n 程序头表偏移地址          %d 字节", ehdr.e_phoff);
+    printf("\n 节头表偏移地址            %d 字节",ehdr.e_shoff);
+    printf("\n 此头部大小                %d 字节",ehdr.e_ehsize);
+    printf("\n 程序头数量                %d",ehdr.e_phnum);
+    printf("\n 节头数量                  %d",ehdr.e_shnum);
+    printf("\n 程序头大小                %d 字节",ehdr.e_phentsize);
+    printf("\n 节头大小                  %d 字节",ehdr.e_shentsize);
+    printf("\n 节头字符串表下标          %d\n\n",ehdr.e_shstrndx);
 }
 
 

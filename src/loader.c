@@ -1,10 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <linux/elf.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <malloc.h>
+#include <errno.h>
+#include <dlfcn.h>
 
 #include "section_table.h"
 #include "program_table.h"
+
+
+enum {H,P,SEC,A,SYM,STR,R,OPC};
+int opt[OPC] = {0};
 
 /* 文件大小 */
 int sizeoffile(FILE *f)
@@ -24,41 +32,49 @@ void Ehdr64(Elf64_Ehdr ehdr);
  */
 void Ehdr64(Elf64_Ehdr ehdr)
 {
-    printf("ELF header:\n magic: ");
-    for (int i = 0; i<EI_NIDENT;i++) {
-        printf("%02x ",ehdr.e_ident[i]);
+    if (memcmp(ehdr.e_ident,ELFMAG,4) != 0) {
+        printf("not a single ELF.\n");
+        abort();
     }
-    char *ET[7] = {
-        "No file type",
-        "Relocatable file",
-        "Executable file",
-        "Shared object file",
-        "Core file"
-    };
-    char *MC[20] = {
-        "No machine",
-        "AT&T WE 321000",
-        "SPARC",
-        "Intel Architecture",
-        "Motorola 68000",
-        "Motorola 88000",
-        "Intel 80860",
-        "MIPS RS3000 Big-Endian",
-        "MIPS RS4000 Big-Endian"
-    };
-    printf("\n 文件类型                  %s",ET[ehdr.e_type]);
-    printf("\n 种类                      ELF%d",ehdr.e_ident[EI_CLASS]==1?32:64);
-    printf("\n 字节序                    %s", ehdr.e_ident[EI_DATA]==1?"小端":"大端");
+    if (opt[H] || opt[A]) {
+         printf("ELF header:\n magic: ");
+        for (int i = 0; i<EI_NIDENT;i++) {
+            printf("%02x ",ehdr.e_ident[i]);
+        }
+        printf("\n");
+        char *ET[7] = {
+            "No file type",
+            "Relocatable file",
+            "Executable file",
+            "Shared object file",
+            "Core file"
+        };
+        char *MC[20] = {
+            "No machine",
+            "AT&T WE 321000",
+            "SPARC",
+            "Intel Architecture",
+            "Motorola 68000",
+            "Motorola 88000",
+            "Intel 80860",
+            "MIPS RS3000 Big-Endian",
+            "MIPS RS4000 Big-Endian"
+        };
+        printf(" 文件类型                  %s",ET[ehdr.e_type]);
+        printf("\n 种类                      ELF%d",ehdr.e_ident[EI_CLASS]==1?32:64);
+        printf("\n 字节序                    %s", ehdr.e_ident[EI_DATA]==1?"小端":"大端");
     //printf("\n机器                      %d", ehdr.e_machine);
-    printf("\n 入口地址                  0x%x", ehdr.e_entry);
-    printf("\n 程序头表偏移地址          %d 字节", ehdr.e_phoff);
-    printf("\n 节头表偏移地址            %d 字节",ehdr.e_shoff);
-    printf("\n 此头部大小                %d 字节",ehdr.e_ehsize);
-    printf("\n 程序头数量                %d",ehdr.e_phnum);
-    printf("\n 节头数量                  %d",ehdr.e_shnum);
-    printf("\n 程序头大小                %d 字节",ehdr.e_phentsize);
-    printf("\n 节头大小                  %d 字节",ehdr.e_shentsize);
-    printf("\n 节头字符串表下标          %d\n\n",ehdr.e_shstrndx);
+        printf("\n 入口地址                  0x%llx", ehdr.e_entry);
+        printf("\n 程序头表偏移地址          %llu 字节", ehdr.e_phoff);
+        printf("\n 节头表偏移地址            %llu 字节",ehdr.e_shoff);
+        printf("\n 此头部大小                %d 字节",ehdr.e_ehsize);
+        printf("\n 程序头数量                %d",ehdr.e_phnum);
+        printf("\n 节头数量                  %d",ehdr.e_shnum);
+        printf("\n 程序头大小                %d 字节",ehdr.e_phentsize);
+        printf("\n 节头大小                  %d 字节",ehdr.e_shentsize);
+        printf("\n 节头字符串表下标          %d\n\n",ehdr.e_shstrndx);
+    }
+   
 }
 
 
@@ -85,10 +101,14 @@ size_t get_load_size(Elf64_Phdr *phdr,
     
     *start = min;
     *end = max;
-    return max - min;
+    return max - min+1;
 }
 
 
+void * find_in_libc(char * sym)
+{
+    return dlsym(dlopen("libc.so",RTLD_NOW),sym);
+}
 int main (int argc, char * argv[])
 {
 
@@ -114,28 +134,36 @@ int main (int argc, char * argv[])
 
     Elf64_Addr start,end;
     size_t load_size = get_load_size(phdr,ehdr.e_phnum,&start,&end);
-    printf("需要%p字节来加载段\n",load_size);
+    if (opt[P] || opt[A])
+    printf("需要%zu字节来加载段\n",load_size);
 
-  //  char * loaded = (char*)malloc(end-start);
+    char * loaded = (char*)malloc(load_size);
     /* 遍历程序头表 */
     for (int i = 0; i < ehdr.e_phnum; i++) {
+        if (opt[P] || opt[A])
+        printf("P[%d] 0x%016llx to 0x%016llx",i,phdr[i].p_offset, phdr[i].p_filesz+phdr[i].p_offset);
         fseek(file,phdr[i].p_offset,SEEK_SET);
         /* 尝试加载到内存中  没有重定位 没有执行权限 估计不能运行 */
-        //fread(loaded + phdr[i].p_vaddr,phdr[i].p_filesz,1,file);
         if (phdr[i].p_type == PT_INTERP) {
-            printf("解释器解释的段\n");
+            char buff[1024] = {0};
+            fread(buff,phdr[i].p_filesz,1,file);
+            if (opt[P] || opt[A])
+            printf("\n%s",buff);
         }
-        if (phdr[i].p_type == PT_LOAD) {
-            int l = phdr[i].p_filesz;
-            Phdr64(phdr[i]);
-            for (int i = 0; i < l ;i +=4 ) {
-                //printf("%04x%04x ",segment[i],segment[1+i]);
-                if (i %20 == 0) {
-                    //printf("\n");
-                }
-            } 
+        else if (phdr[i].p_type == PT_LOAD) {
+            int fz = phdr[i].p_filesz;
+            int mz = phdr[i].p_memsz;
+            if(fz > mz) printf("错误的加载段");
+            fread(loaded + phdr[i].p_vaddr,phdr[i].p_filesz,1,file);
+            //Phdr64(phdr[i]);
         }
+        if (opt[P] || opt[A])
+        printf("\n");
     }
+    char *exec = mmap((void*)start,load_size,PROT_EXEC|PROT_READ|PROT_WRITE,MAP_PRIVATE | MAP_ANONYMOUS,0,0);
+    if (!exec) perror("mmap");
+    else
+    memcpy(exec,loaded,load_size);
     
    
     /* 节头  */
@@ -156,24 +184,30 @@ int main (int argc, char * argv[])
     fread(shdr,shdrlen,1,file);
 
     /* 逐个解析 */
+    char dym_name [1024][256] = {0}; 
+    int dym_c = 0;
     for (int i = 0; i < ehdr.e_shnum; i++) {
-        //printf("%p\n",ftell(file));
-       Shdr64(shdr[i],names);
-        if (shdr[i].sh_type == SHT_SYMTAB) {
+        if (shdr[i].sh_addr != 0x0) {
+            if (opt[SEC] || opt[A])
+            printf("[%08llx]%s\n",shdr[i].sh_addr,names+shdr[i].sh_name);
+        }
+        /* 读取整个节 */
+        char * sts = (char *)malloc(shdr[i].sh_size);
+        fseek(file,shdr[i].sh_offset,SEEK_SET);
+        fread(sts,shdr[i].sh_size,1,file);
+        if (shdr[i].sh_type == SHT_SYMTAB || shdr[i].sh_type==SHT_DYNSYM) {
             int sc = shdr[i].sh_size/sizeof(Elf64_Sym);
-            printf("符号表[%d]\n",sc);
+            if (opt[A] || opt[SYM])
+            printf("SYMTAB[%d]\n",sc);
             int strndx = shdr[i].sh_link;
-            printf("连接到[%010p]字符串表\n",strndx);
             fseek(file, shdr[strndx].sh_offset,SEEK_SET);
             char * strings = (char *)malloc(shdr[strndx].sh_size);
             fread(strings,shdr[strndx].sh_size,1,file);
-
-
-            fseek(file,shdr[i].sh_offset,SEEK_SET);;
+            if(opt[SYM] || opt[A])
+            printf("ndx\tvalue\t\ttype\t\tname\n");
             for(int j = 0; j<sc; j++) {
-                Elf64_Sym sym;
-                fread(&sym,sizeof(sym),1,file);
-                printf("[%s]=[%x]",strings + sym.st_name, sym.st_value);
+                Elf64_Sym *sym = (Elf64_Sym*)sts+j;
+                if (strings[sym->st_name] == 0) continue;
                 char SIT[10][7] = {
                     "NOTYPE",
                     "OBJECT",
@@ -194,15 +228,16 @@ int main (int argc, char * argv[])
                 int sb = 0; // BIND
                 int sif = 0; //INFO
                 if (ehdr.e_ident[EI_CLASS] == ELFCLASS32) {
-                    sb = ELF32_ST_BIND(sym.st_info);
-                    sit = ELF32_ST_TYPE(sym.st_info);
+                    sb = ELF32_ST_BIND(sym->st_info);
+                    sit = ELF32_ST_TYPE(sym->st_info);
                 }
                 else  if (ehdr.e_ident[EI_CLASS] == ELFCLASS64) {
-                    sb = ELF64_ST_BIND(sym.st_info);
-                    sit = ELF64_ST_TYPE(sym.st_info);
+                    sb = ELF64_ST_BIND(sym->st_info);
+                    sit = ELF64_ST_TYPE(sym->st_info);
                 }
-                
-                printf("BIND_");
+            if(opt[SYM] || opt[A])
+                printf("%d\t%08llx\t", sym->st_shndx,sym->st_value);
+            if(opt[SYM] || opt[A])
                 if (sb <=2) {
                     printf("%s",SB[sb]);
                 }else if (sit == 13) {
@@ -210,31 +245,63 @@ int main (int argc, char * argv[])
                 }else if (sit == 15) {
                     printf("%s",SB[4]);
                 }
-                printf(" ");
+                if(opt[SYM] || opt[A])
+                printf("_");
+                if(opt[SYM] || opt[A])
                 if (sit <=4) {
-                    printf("TYPE_%s\n",SIT[sit]);
+                    printf("%s",SIT[sit]);
                 }else if (sit == 13) {
-                    printf("TYPE_%s\n",SIT[5]);
+                    printf("%s",SIT[5]);
                 }else if (sit == 15) {
-                    printf("TYPE_%s\n",SIT[5]);
+                    printf("%s",SIT[5]);
                 }
+                if(opt[SYM] || opt[A])
+                printf("\t%s\n",strings + sym->st_name);
+                if (shdr[i].sh_type == SHT_DYNSYM) {
+                    strcpy(dym_name[dym_c++],strings+sym->st_name);
+                    if(opt[SYM] || opt[A])
+                    printf("%s:%p\n",strings+sym->st_name,find_in_libc(strings+sym->st_name));
+                }
+                typedef int (*fp)(int argc,char *arg[]);
+                if(!strcmp(strings+sym->st_name,"main")){
+                    fp ptr = (fp)(exec+sym->st_value);
+                    printf("%s:[%p]\n","main",ptr);
+                    char pargv [5][25] = {"fuck!","hello"};
+                    int res = ptr(argc-1,argv+1);
+                    printf("\nres(%d)\n",res);
+                }
+
             }
+            free(strings);
         }else if (shdr[i].sh_type == SHT_REL) {
-            printf("重定位表\n");
-        } else if (shdr[i].sh_type == SHT_STRTAB) {
-        }
-        if (shdr[i].sh_addr != 0x0) {
-            printf("[%010p]%s\n",shdr[i].sh_addr,names+shdr[i].sh_name);
-            for (int j = shdr[i].sh_addr; j < shdr[i].sh_size + shdr[i].sh_addr; j+= 4) {
-                //printf("%02x%02x%02x%02x \n",
-                       //loaded[j+3],
-                       //loaded[j+2],
-                       //loaded[j+1],
-                       //loaded[j+0]);
+            if (opt[A] || opt[R])
+            printf("REL\n");
+        }else if (shdr[i].sh_type == SHT_RELA) {
+            if (ehdr.e_machine != EM_AARCH64 ) continue;
+            int sc = shdr[i].sh_size/sizeof(Elf64_Rela);
+
+            if (opt[R] || opt[A]) {
+                printf("RELA[%d]\n",sc);
+                printf("offset\t\ttype\t\tsym\n");
+            }
+            for (int j= 0; j<sc;j++) {
+                Elf64_Rela * rela = (Elf64_Rela*)sts+j;
+                if (opt[A] || opt[R])
+                printf("%08llx\t%llx\t\t%s\n",rela->r_offset,ELF64_R_TYPE(rela->r_info),(char*)dym_name[j]);
+                *((int64_t*)(exec+rela->r_offset)) = find_in_libc(dym_name[j]);
+
+            }
+
+        } else if (shdr[i].sh_type == SHT_STRTAB && ( opt[STR] || opt[A])) {
+            for(int j=0;j<shdr[i].sh_size;j++) {
+                if (sts[j] == 0) printf("\\0");
+                else printf(" %c",sts[j]);
+                if ((j+1)%20 == 0) printf("\n");
             }
             printf("\n");
-        }     
+        }
     }
+
     free(names);
 
     

@@ -1,13 +1,35 @@
+#include <stdio.h>
+#include <dlfcn.h>
 
-
-void foo();
-void foo2()
+int foo()
 {
-    return;
+    printf("foo()->\n");
+    return 9;
 }
-int main()
+
+int  foo2()
 {
-    foo();
+    printf("foo2()->");
+    return 3+foo();
+}
+
+
+int main(int argc,char *argv[])
+{
+    
+    for (int i=0;i<argc;i++) {
+        printf("argv[%d]:%s\n",i,argv[i]);
+    }
     foo2();
-    printf("%x",main);
+    FILE * f = fopen(argv[1],"r");
+    char ch;
+    while (1) {
+        ch = fgetc(f);
+        if (feof(f)) break;
+        putchar(ch);
+    }
+    printf("\n");
+    fclose(f);
+    return 16;
 }
+
